@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <!-- 
+    EthosMiracle POS - Point Of Sale
+    Copyright (c) 2012-2018 Ethosteck.
+    
+    This file is part of EthosMiracle POS.
+
+    EthosMiracle POS is licensed software: you cannot redistribute it and/or modify
+    it under the terms of the EULA End User Licence Aggreement as published by
+    the eula Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Intentionaly EthosTeck Charges for Services Only.
+     
+    EthosMiracle POS is distributed in the hope that it will be useful,
+    but WITH Limited WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ -->
+<output>
+    <fiscalreceipt>
+        #foreach ($ticketline in $ticket.getLines())
+            <!-- setting $vatinfo to the values contained in the fiscal printer vat table-->
+            #if (${ticketline.getTaxInfo().getRate()}==0.04)
+                    #set ($vatinfo ="1")
+            #elseif	(${ticketline.getTaxInfo().getRate()}==0.1)
+                    #set ($vatinfo ="2")	
+            #elseif (${ticketline.getTaxInfo().getRate()}==0.2)
+                    #set ($vatinfo ="3")
+            #else
+                    #set ($vatinfo ="1")
+            #end
+             #if ($ticketline.isProductCom()) 
+                 <line price="${ticketline.getValue()}" units="${ticketline.getMultiply()}" tax="${vatinfo}">*${ticketline.printName()}</line>
+             #else
+                 <line price="${ticketline.getValue()}" units="${ticketline.getMultiply()}" tax="${vatinfo}">${ticketline.printName()}</line>
+             #end
+        #end
+        <message>Items count: ${ticket.printArticlesCount()}</message>
+        #foreach ($paymentline in $ticket.payment)      
+         #if ($paymentline.name == "cash")
+            <total paid="${paymentline.getPaid()}">Cash</total>
+         #end
+         #if ($paymentline.name == "cashrefund")
+            <total paid="${paymentline.getTotal()}">Refund</total>  
+         #end
+         #if ($paymentline.name == "magcard")
+            <total paid="${paymentline.getTotal()}">Mag card</total>  
+         #end  
+         #if ($paymentline.name == "magcardrefund")
+            <total paid="${paymentline.getTotal()}">Mag card refund</total>     
+         #end
+         #if ($paymentline.name == "cheque")
+            <total paid="${paymentline.getTotal()}">Cheque</total>    
+         #end
+         #if ($paymentline.name == "chequerefund")
+            <total paid="${paymentline.getTotal()}">Cheque refund</total>    
+         #end
+        #end 
+    </fiscalreceipt>
+<!-- Other commands -->
+<!--
+    <fiscalzreport/>
+    <fiscalxreport/>
+-->    
+</output>

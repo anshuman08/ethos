@@ -1,0 +1,60 @@
+// script.StockCurrentSet
+// This script checks Stock Level for a sale item
+//
+//    EthosMiracle POS - Point Of Sale
+//    Copyright (c) 2012-2018 Ethosteck.
+    
+//    This file is part of EthosMiracle POS.
+
+//    EthosMiracle POS is licensed software: you cannot redistribute it and/or modify
+//    it under the terms of the EULA End User Licence Aggreement as published by
+//    the eula Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//    Intentionally EthosTeck Charges for Services Only.
+     
+//    EthosMiracle POS is distributed in the hope that it will be useful,
+//    but WITH Limited WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// **************************************************************************
+ 
+ import com.openbravo.pos.forms.DataLogicSales;
+ import com.openbravo.pos.forms.DataLogicSystem;
+ import com.openbravo.data.loader.Session;
+ import java.util.Properties;
+ 
+ Session session = new Session(dbURL, dbUser, dbPassword);
+ DataLogicSales logicsale = new DataLogicSales();
+ logicsale.init(session);
+ DataLogicSystem logicsystem = new DataLogicSystem();
+ logicsystem.init(session);
+ Properties p = logicsystem.getResourceAsProperties(hostname + "/properties");
+ String loc = p.getProperty("location");
+ 
+ product = line.getProductID();
+ isserv = line.isProductService();
+ units = logicsale.findProductStock(loc,product,null);
+ multiply = 0;
+ index = sales.getSelectedIndex();
+ 
+  if (line.isProductService() == true) {
+	javax.swing.JOptionPane.showMessageDialog(null, "This is a Service and Stock Level is not checked");
+  } else {
+
+	 if (index != -1) {
+	     currentrow = ticket.getLine(index);
+	     multiply = multiply - currentrow.getMultiply();
+	 }
+	 for (int i= 0; i < ticket.getLinesCount(); i++) {
+	     row = ticket.getLine(i);
+	     if (row.getProductID() == product) {
+	        multiply = multiply + row.getMultiply();
+	     }
+	 }
+	 diff = units - line.getMultiply() - multiply;
+	 if (diff < 0.0) {
+	    javax.swing.JOptionPane.showMessageDialog(null, "Not enough stock at this Location " + loc + " - Please use Stock Diary to Add Stock to Inventory", "Stock", JOptionPane.WARNING_MESSAGE);
+	    return "Cancel";
+	 } else {
+	         return null;
+	 }
+ }

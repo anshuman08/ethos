@@ -1,0 +1,48 @@
+// script.ServiceCharge
+//    EthosMiracle POS - Point Of Sale
+//    Copyright (c) 2012-2018 Ethosteck.
+    
+//    This file is part of EthosMiracle POS.
+
+//    EthosMiracle POS is licensed software: you cannot redistribute it and/or modify
+//    it under the terms of the EULA End User Licence Aggreement as published by
+//    the eula Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//    Intentionally EthosTeck Charges for Services Only.
+     
+//    EthosMiracle POS is distributed in the hope that it will be useful,
+//    but WITH Limited WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// **************************************************************************
+// This script applies UsersInput% or Fixed Service Charge for the Total Receipt value
+
+import com.openbravo.format.Formats;
+import com.openbravo.pos.ticket.TicketLineInfo;
+import com.openbravo.pos.ticket.TicketProductInfo;
+import java.util.Properties;
+
+//scper = JOptionPane.showInputDialog(null, "Input percentage.....");
+scper = "12.5";
+
+double scrate = Double.parseDouble(scper);
+scrate = scrate/100.00;
+
+total = ticket.getTotal(); 
+if (total > 0.0) { 
+    scval = Formats.PERCENT.formatValue(scrate); 
+ 
+    taxes = ticket.getTaxLines(); 
+    for (int i = 0; i < taxes.length; i++) { 
+        taxline = taxes[i]; 
+        ticket.insertLine(ticket.getLinesCount(),
+            new TicketLineInfo(
+                "Service @  " + scval + " of " + taxline.printSubTotal(),  
+                taxline.getTaxInfo().getTaxCategoryID(),         
+                1.0,
+                +taxline.getSubTotal() * scrate,
+                taxline.getTaxInfo())); 
+    } 
+    sales.setSelectedIndex(ticket.getLinesCount() - 1);
+} else { 
+    java.awt.Toolkit.getDefaultToolkit().beep(); 
+}

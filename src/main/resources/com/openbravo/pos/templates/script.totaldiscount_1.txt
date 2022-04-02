@@ -1,0 +1,47 @@
+// script.totaldiscount
+// This script applies UsersInput% Discount for the Total Receipt value
+//
+//    EthosMiracle POS - Point Of Sale
+//    Copyright (c) 2012-2018 Ethosteck.
+    
+//    This file is part of EthosMiracle POS.
+
+//    EthosMiracle POS is licensed software: you cannot redistribute it and/or modify
+//    it under the terms of the EULA End User Licence Aggreement as published by
+//    the eula Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//    Intentionally EthosTeck Charges for Services Only.
+     
+//    EthosMiracle POS is distributed in the hope that it will be useful,
+//    but WITH Limited WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+// **************************************************************************
+// This script applies UsersInput% Discount for the Total Receipt value
+
+import com.openbravo.format.Formats;
+import com.openbravo.pos.ticket.TicketLineInfo;
+import com.openbravo.pos.ticket.TicketProductInfo; 
+
+discountrate = 1 - sales.getInputValue();
+
+index = sales.getSelectedIndex();
+if (index >= 0) {
+    if (ticket.getTotal() > 0.0 && discountrate > 0.0) {
+        sdiscount = Formats.PERCENT.formatValue((1-discountrate));
+        for (int number= 0; number < ticket.getLinesCount(); number++) {
+            line = ticket.getLine(number);
+            ticket.setLine(number,
+            new TicketLineInfo(
+                    line.getProductID(),
+                    line.getProductName() + " - Discount @  " + sdiscount + " was " + line.getPrice(),
+                    line.getProductTaxCategoryID(),
+                    line.getMultiply(),
+                    (double)Math.rint(line.getPrice() * discountrate *100) /100d,
+                    line.getTaxInfo())); 
+        }  
+    } else {  
+        java.awt.Toolkit.getDefaultToolkit().beep();
+    }
+} else {
+    java.awt.Toolkit.getDefaultToolkit().beep();
+}

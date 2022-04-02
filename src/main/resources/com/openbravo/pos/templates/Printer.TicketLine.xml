@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    EthosMiracle POS - Point Of Sale
+    Copyright (c) 2012-2018 Ethosteck.
+    
+    This file is part of EthosMiracle POS.
+
+    EthosMiracle POS is licensed software: you cannot redistribute it and/or modify
+    it under the terms of the EULA End User Licence Aggreement as published by
+    the eula Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Intentionaly EthosTeck Charges for Services Only.
+     
+    EthosMiracle POS is distributed in the hope that it will be useful,
+    but WITH Limited WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ -->
+<output>
+    <display>
+        <line>
+            #if ($ticketline.isProductCom()) 
+                <text align="left" length="15">*${ticketline.printName()}</text>
+            #else
+                 <text align="left" length="15">${ticketline.printName()}</text>
+            #end
+            <text align="right" length="5">x${ticketline.printMultiply()}</text>
+        </line>
+        <line>
+<!-- These lines for values without tax            
+            <text align="right" length="10">${ticketline.printPrice()}</text>
+            <text align="right" length="10">${ticketline.printSubValue()}</text>
+-->            
+<!-- These lines for values with tax -->
+            <text align ="right" length="10">${ticketline.printPriceTax()}</text>
+            <text align ="right" length="10">${ticketline.printValue()}</text>
+                            
+        </line>
+    </display>
+</output>

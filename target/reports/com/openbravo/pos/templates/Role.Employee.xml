@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    EthosMiracle POS - Point Of Sale
+    Copyright (c) 2012-2018 Ethosteck.
+    
+    This file is part of EthosMiracle POS.
+
+    EthosMiracle POS is licensed software: you cannot redistribute it and/or modify
+    it under the terms of the EULA End User Licence Aggreement as published by
+    the eula Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Intentionaly EthosTeck Charges for Services Only.
+     
+    EthosMiracle POS is distributed in the hope that it will be useful,
+    but WITH Limited WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ -->
+
+<!--
+    The Administrator Role Permissions has full access to all uniCenta oPOS
+    functionality.
+    The Administrator Role should only be used to make system changes.
+    
+    *** Do not change unless you know what you are doing ***
+-->
+
+<permissions>
+    <class name="com.openbravo.pos.sales.JPanelTicketSales"/>
+    <class name="com.openbravo.pos.sales.JPanelTicketEdits"/>
+    <class name="com.openbravo.pos.customers.CustomersPayment"/>
+    <class name="com.openbravo.pos.panels.JPanelPayments"/>  
+
+<!--    <class name="sales.EditLines"/> -->
+    <class name="sales.EditTicket"/>
+    <class name="sales.PrintTicket"/>
+    <class name="sales.Total"/>
+    
+    <class name="payment.cash"/>
+    <class name="payment.cheque"/>
+    <class name="payment.voucher"/>
+    <class name="payment.magcard"/>
+    <class name="payment.slip"/>    
+    <class name="payment.free"/>
+    <class name="payment.debt"/>
+    <class name="sales.PrintKitchen"/>
+
+
+<!-- Standard button scripts -->
+    <class name="button.totaldiscount"/>
+    <class name="button.print"/>
+    
+<!-- Additional button scripts -->
+    <class name="button.linediscount"/>
+    <class name="button.sendorder"/>
+
+<class name="Menu.ChangePassword"/>
+<class name="com.openbravo.pos.panels.JPanelPrinter"/>
+
+</permissions>

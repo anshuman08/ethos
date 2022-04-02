@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+    EthosMiracle POS - Point Of Sale
+    Copyright (c) 2012-2018 Ethosteck.
+    
+    This file is part of EthosMiracle POS.
+
+    EthosMiracle POS is licensed software: you cannot redistribute it and/or modify
+    it under the terms of the EULA End User Licence Aggreement as published by
+    the eula Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Intentionaly EthosTeck Charges for Services Only.
+     
+    EthosMiracle POS is distributed in the hope that it will be useful,
+    but WITH Limited WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ -->
+
+<output>
+
+    <display>
+        <line>
+            <text align="left" length="10">Order sent to Kitchen</text>
+            <text align="right" length="10">${ticket.printTotal()}</text>
+        </line>
+        <line>
+            <text align="center" length="20">Thank you.</text>
+        </line>
+    </display>
+
+    <ticket printer = "2">
+        <line></line>
+        <line></line>
+        <line size = "1"><text bold = "true" align="center" length="42">Kitchen Order</text></line>
+        <line></line>
+        <line>
+            <text align="left" length="15">Receipt:</text>
+            <text>${ticket.printId()}</text>
+        </line>
+        <line>
+            <text align="left" length="15">Date:</text>
+            <text>${ticket.printDate()}</text>
+        </line>
+
+    #if ($ticket.getCustomer())
+        <line>
+            <text align="left" length="15">Customer:</text>
+            <text>${ticket.getCustomer().getName()}</text>
+        </line>
+        <line>
+            <text align="left" length="15"></text>
+            <text align="left" length="15">Account #:</text>
+            <text>${ticket.getCustomer().getTaxid()}</text>
+        </line>
+    #end
+            #if($mobileorder.getCustomerName())
+        <line>
+            <text align="left" length="15">Customer:</text>
+            <text>${mobileorder.getCustomerName()}</text>
+        </line>
+        <line>
+            <text align="left" length="15">Address</text>
+            #set ($strlen = $mobileorder.getAddress().length())
+            #if ($strlen > 28)
+            <text align="left" length="27">${mobileorder.getAddress().substring(0,27)}</text>
+        </line>
+        <line>
+            <text align="left" >${mobileorder.getAddress().substring(27,$strlen)}</text>
+        </line>
+        #end
+        #end
+
+        #if (${tickettext.place} != ${place})
+            <line>
+                <text align="left" length="15">Table:</text>
+                <text>${place}</text>
+            </line>
+        #end
+        
+        <line></line>
+        <line>
+            <text align ="left" length="17">Item</text>
+            <text align ="right" length="5"></text>
+        </line>
+        <line>
+            <text>------------------------------------------</text>
+        </line>
+
+    #foreach ($ticketline in $ticket.getLines())
+        #if(($ticketline.isProductKitchen()) && ($ticketline.getProperty("sendstatus").equals("No")))
+            <line><text align ="left" length="5"> ${ticketline.printMultiply()}x</text>
+                #if ($ticketline.isProductCom())
+                    <text align ="left" length="37"> --${ticketline.printName()}</text>
+                #else
+                    <text align ="left" length="37"> ${ticketline.printName()}</text>
+                #end
+            </line>
+
+            <!-- Add the following lines only for 2.30 Attributes -->
+              #if ($ticketline.productAttSetInstId)
+                <line>
+                    <text align ="left" length="42">${ticketline.productAttSetInstDesc}</text>
+                </line>
+                <line></line>
+              #end
+         #end
+
+    #end
+        <line>
+            <text>------------------------------------------</text>
+        </line>
+        <line>
+            <text align="left" length="15">Server:</text>
+            <text>${ticket.printUser()}</text>
+        </line>
+
+    </ticket>
+</output>
